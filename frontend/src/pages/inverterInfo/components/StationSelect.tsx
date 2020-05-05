@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 
 import { TreeSelect } from 'antd'
 
@@ -9,7 +10,7 @@ class StationSelect extends Component {
     value: undefined,
   }
 
-  onChange = (value: any) => {
+  onChange = (value: any) => { // 电站的选择被改变时，重新渲染右侧的数据
     console.log(value)
     this.setState({ value })
   }  
@@ -28,17 +29,24 @@ class StationSelect extends Component {
       >
         <TreeNode value="parent 1" title="设备列表">
           <TreeNode value="parent 1-0" title="综合教学楼" selectable={false}>
-            <TreeNode value="leaf1" title="综合教学楼" />
+            <TreeNode value="综合教学楼" title="综合教学楼" />
           </TreeNode>
           <TreeNode value="parent 1-1" title="工科楼" selectable={false}>
-            <TreeNode value="leaf2" title="工科一号楼"/>
-            <TreeNode value="leaf3" title="工科二号楼"/>
+            <TreeNode value="工科一号楼" title="工科一号楼"/>
+            <TreeNode value="工科二号楼" title="工科二号楼"/>
           </TreeNode>
         </TreeNode>
       </TreeSelect>
     )
   }
-
 }
 
-export default StationSelect
+const mapStateToProps = (state: any) => {
+  return {}
+}
+
+const mapDispatchToProps = (dispatch: any) => {
+  return {}
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(StationSelect)

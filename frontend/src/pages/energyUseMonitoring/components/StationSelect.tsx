@@ -1,25 +1,30 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import { actionCreators } from '../store'
 
 import { TreeSelect } from 'antd'
 
+interface PropsTypes {
+  local: string,
+  changeLocal: (local: string) => void
+}
+
 const { TreeNode } = TreeSelect
 
-class StationSelect extends Component {
-  state = {
-    value: undefined,
-  }
+class StationSelect extends Component<PropsTypes> {
 
   onChange = (value: any) => {
-    console.log(value)
-    this.setState({ value })
-  }  
+    if (value !== undefined) {
+      this.props.changeLocal(value)
+    }
+  }
 
   render() {
     return (
       <TreeSelect
         showSearch
         style={{ width: '100%' }}
-        value={this.state.value}
+        value={this.props.local}
         dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
         placeholder="请选择需要查看的设备"
         allowClear
@@ -28,17 +33,31 @@ class StationSelect extends Component {
       >
         <TreeNode value="parent 1" title="设备列表">
           <TreeNode value="parent 1-0" title="综合教学楼" selectable={false}>
-            <TreeNode value="leaf1" title="综合教学楼" />
+            <TreeNode value="综合教学楼" title="综合教学楼" />
           </TreeNode>
           <TreeNode value="parent 1-1" title="工科楼" selectable={false}>
-            <TreeNode value="leaf2" title="工科一号楼"/>
-            <TreeNode value="leaf3" title="工科二号楼"/>
+            <TreeNode value="工科一号楼" title="工科一号楼"/>
+            <TreeNode value="工科二号楼" title="工科二号楼"/>
           </TreeNode>
         </TreeNode>
       </TreeSelect>
     )
   }
-
 }
 
-export default StationSelect
+const mapStateToProps = (state: any) => {
+  const { local } = state.energyUseMonitoring
+  return {
+    local
+  }
+}
+
+const mapDispatchToProps = (dispatch: any) => {
+  return {
+    changeLocal(local: any) {
+      dispatch(actionCreators.changeLocal(local))
+    }
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(StationSelect)

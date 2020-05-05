@@ -1,5 +1,8 @@
 import React, { Component } from 'react'
 import { RouteComponentProps, withRouter } from 'react-router-dom'
+import { connect } from 'react-redux'
+import { actionCreators } from './store'
+
 import { Menu } from 'antd'
 import { 
   BulbOutlined,
@@ -9,26 +12,29 @@ import {
   SettingOutlined
 } from '@ant-design/icons'
 
+
 import styles from './style.module.less'
 import { ClickParam } from 'antd/lib/menu'
 
-interface PropsTypes extends RouteComponentProps {}
+interface PropsTypes extends RouteComponentProps {
+  openKeys: string[],
+  changeOpenMenu: (key: any) => void
+}
+interface StateTypes {
+  openKeys: string[]
+}
 const { SubMenu } = Menu
 
 class LeftSide extends Component<PropsTypes> {
   rootSubmenuKeys = ['sub1', 'sub2', 'sub3', 'sub4', 'sub5']
-  state = {
-    openKeys: ['sub1'],
-  }
 
   onOpenChange = (openKeys: string[]) => {
-    const latestOpenKey = openKeys.find(key => this.state.openKeys.indexOf(key) === -1) || '' 
+    const latestOpenKey = openKeys.find(key => this.props.openKeys.indexOf(key) === -1) || '' 
     if (this.rootSubmenuKeys.indexOf(latestOpenKey) === -1) {
-      this.setState({ openKeys });
+      this.props.changeOpenMenu(openKeys)
     } else {
-      this.setState({
-        openKeys: latestOpenKey ? [latestOpenKey] : [],
-      })
+      openKeys= latestOpenKey ? [latestOpenKey] : []
+      this.props.changeOpenMenu(openKeys)
     }
   }
 
@@ -37,11 +43,13 @@ class LeftSide extends Component<PropsTypes> {
   }
 
   render() {
+    const selectKeys = this.props.history.location.pathname.replace(/\//, '') // 设置每次刷新页面时，选中项跟随路由变化
     return (
       <div className={styles['left-side']}>
         <Menu
           mode="inline"
-          openKeys={this.state.openKeys}
+          openKeys={this.props.openKeys}
+          selectedKeys={[selectKeys]}
           onOpenChange={this.onOpenChange}
           style={{ width: 256 }}
           onClick={this.handleMenuItemClick}
@@ -104,7 +112,7 @@ class LeftSide extends Component<PropsTypes> {
               </span>
             }
           >
-            <Menu.Item key="11">设备信息</Menu.Item>
+            <Menu.Item key="equipment_management">设备信息</Menu.Item>
           </SubMenu>
         </Menu>
       </div>
@@ -112,5 +120,20 @@ class LeftSide extends Component<PropsTypes> {
   }
 }
 
-export default withRouter(LeftSide)
+const mapStateToProps = (state: any) => {
+  return {
+    openKeys: state.leftSide.openKeys
+  }
+}
+
+const mapDispatchToProps = (dispatch: any) => {
+  return {
+    changeOpenMenu(keys: any) {
+      dispatch(actionCreators.changeOpenMenu(keys))
+    }
+  }
+}
+
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(LeftSide as any))
 

@@ -1,9 +1,19 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 
 import styles from '../style.module.less'
 
-class DataPreview extends Component {
+interface PropsTypes {
+  previewData: any
+}
+
+class DataPreview extends Component<PropsTypes> {
+  // constructor(props: any) {
+  //   super(props)
+  // }
+
   render() {
+    const { currentOutput, temperature, co2Reduction, equivalentTree, totalIncome } = this.props.previewData
     return (
       <div className={styles['picData-container']}>
         <div className={styles['picData-title']}>数据概览</div>
@@ -11,31 +21,31 @@ class DataPreview extends Component {
           <div className={styles['picData-item']}>
             当前功率
             <div className={styles['data-detail']}>
-              0
+              {currentOutput + 'w'}
             </div>
           </div>
           <div className={styles['picData-item']}>
             逆变器温度
             <div className={styles['data-detail']}>
-              0
+              {temperature + '℃'}
             </div>
           </div>
           <div className={styles['picData-item']}>
             累计等效CO2减排量
             <div className={styles['data-detail']}>
-              0
+              {co2Reduction + 't'}
             </div>
           </div>
           <div className={styles['picData-item']}>
             累计等效树木
             <div className={styles['data-detail']}>
-              0
+              {equivalentTree + '棵'}
             </div>
           </div>
           <div className={styles['picData-item']}>
             总收入
             <div className={styles['data-detail']}>
-              0
+              {totalIncome + '元'}
             </div>
           </div>
         </div>
@@ -44,4 +54,14 @@ class DataPreview extends Component {
   }
 }
 
-export default DataPreview
+const mapStateToProps = (state: any) => {
+  return {
+    previewData: state.inverterInfo.previewData
+  }
+}
+
+const mapDispatchToProps = (dispatch: any) => {
+  return {}
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(DataPreview)

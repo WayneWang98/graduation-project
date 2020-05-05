@@ -1,9 +1,16 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 
 import styles from '../style.module.less'
 
-class DataPreview extends Component {
+interface PropsTypes {
+  previewData: any
+}
+
+class DataPreview extends Component<PropsTypes> {
   render() {
+    
+    const { currentLoad, ratio, percentage, maxMouthLoad, maxYearLoad} = this.props.previewData
     return (
       <div className={styles['picData-container']}>
         <div className={styles['picData-title']}>数据概览</div>
@@ -11,31 +18,31 @@ class DataPreview extends Component {
           <div className={styles['picData-item']}>
             当前负荷
             <div className={styles['data-detail']}>
-              0
+              {currentLoad + 'Wh'}
             </div>
           </div>
           <div className={styles['picData-item']}>
             比上周同期
             <div className={styles['data-detail']}>
-              0
+              {ratio + '%'}
             </div>
           </div>
           <div className={styles['picData-item']}>
             占全单位占比
             <div className={styles['data-detail']}>
-              0
+              {percentage + '%'}
             </div>
           </div>
           <div className={styles['picData-item']}>
             月最大负荷
             <div className={styles['data-detail']}>
-              0
+              {maxMouthLoad + 'Wh'}
             </div>
           </div>
           <div className={styles['picData-item']}>
             年最大负荷
             <div className={styles['data-detail']}>
-              0
+              {maxYearLoad + 'Wh'}
             </div>
           </div>
         </div>
@@ -44,4 +51,17 @@ class DataPreview extends Component {
   }
 }
 
-export default DataPreview
+const mapStateToProps = (state: any) => {
+  const { previewData } = state.energyUseMonitoring
+  return {
+    previewData
+  }
+}
+
+const mapDispatchToProps = (dispatch: any) => {
+  return {
+
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(DataPreview)

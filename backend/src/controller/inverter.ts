@@ -54,11 +54,14 @@ export class InverterController {
   }
 
   handleDataWithDateType(data: any, len: number, dateType: string, field: string) { // 处理不同日期类型的数据：年、月、日
-    let arr = []
     field = field.replace(/\_(\w)/g, (all, letter: string) => {
       return letter.toUpperCase()
     })
-    for (let i = 0; i < len; i ++) {
+    let arr = [], start = 1 // start表示开始的下标，dateType为月或年时，从“1”开始，因为年份和月份中不存在第0天，而时间是以0-23进行计算
+    if (dateType === 'day') {
+      start = 0
+    }
+    for (let i = start; i <= len; i ++) {
       let averageTotalValue = 0, averageTansTemp1 = 0, averageTansTemp2 = 0, num = 0
       data.forEach((item: any) => {
         const date = new Date(item.times)
@@ -100,7 +103,7 @@ export class InverterController {
 
   async postChart(reqBody: ChartReqBody) {
     let { date, type, name, field} = reqBody
-    date = date.substr(0, DateType[type])
+    // date = date.substr(0, DateType[type])
     field = FieldType[field]
     const sql = `SELECT id, ${field}, tans_temp_1, tans_temp_2, times FROM tb_inverter WHERE local = '长沙理工大学云塘校区' AND inverter_name = '${name}' AND times LIKE "${date}%"`
     const result = await new Promise(resolve => {
@@ -111,11 +114,15 @@ export class InverterController {
         })
         switch(type) { // 根据不同的日期类型进行数据处理
           case 'day': {
-            results = this.handleDataWithDateType(results, 24, 'day', field)
+            results = this.handleDataWithDateType(results, 23, 'day', field)
             break
           }
           case 'month': {
-            results = this.handleDataWithDateType(results, 30, 'month', field)
+            const newDate = new Date(date)
+            const month = newDate.getMonth() + 1
+            const year = newDate.getFullYear()
+            const len = new Date(year, month, 0).getDate() // 获取某个月份的天数
+            results = this.handleDataWithDateType(results, len, 'month', field)
             break
           }
           case 'year': {
@@ -125,6 +132,7 @@ export class InverterController {
           default: break
         }
         results = getJsonResult(results, 200, 'message')
+        
         resolve(results)
       })
     })

@@ -1,0 +1,5 @@
+const prefix = 'INVERTER_INFO'
+export const CHANGE_DATE_TYPE = prefix +  '/CHANGE_DATE_TYPE'
+export const CHANGE_DATE_VALUE = prefix + '/CHANGE_DATE_VALUE'
+export const CHANGE_FIELD = prefix + '/CHANGE_FIELD'
+export const CHANGE_CHART_DATA = prefix + '/CHANGE_CHART_DATA'

@@ -1,43 +1,22 @@
 /* 电站列表组件 */
 
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 
 import styles from '../style.module.less'
 
-class PowerStationList extends Component {
-  state = {
-    stationList: [{
-      id: 1,
-      name: '电站1',
-      imgSrc: 'http://localhost:8099/file/cslg.jpg',
-      scale: 10,
-      currentPower: 200,
-      dailyOutput: 11,
-      totalOutput: 23,
-      times: (new Date()).toLocaleString()
-    }, {
-      id: 2,
-      name: '电站2',
-      imgSrc: 'http://localhost:8099/file/cslg.jpg',
-      scale: 100,
-      currentPower: 300,
-      dailyOutput: 11,
-      totalOutput: 23,
-      times: (new Date()).toLocaleString()
-    }, {
-      id: 3,
-      name: '电站3',
-      imgSrc: 'http://localhost:8099/file/cslg.jpg',
-      scale: 20,
-      currentPower: 113,
-      dailyOutput: 11,
-      totalOutput: 23,
-      times: (new Date()).toLocaleString()
-    }]
-  }
+interface PropsTypes {
+  stationList: any
+}
+
+interface StateTypes {
+  stationList: any
+}
+
+class PowerStationList extends Component<PropsTypes, StateTypes> {
 
   render() {
-    const stationItems = this.state.stationList.map((item, index) => {
+    const stationItems = this.props.stationList.map((item: any, index: number) => {
       return (
         <div key={item.id} className={styles['staion-list-item']}>
           <img src={item.imgSrc} alt='test图片'/>
@@ -81,4 +60,15 @@ class PowerStationList extends Component {
   }
 }
 
-export default PowerStationList
+const mapStateToProps = (state: any) => {
+  return {
+    stationList: state.powerStationPreview.stationList
+  }
+}
+const mapDispatchToProps = () => {
+  return {
+    
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(PowerStationList)

@@ -1,0 +1,1 @@
+export const CHANGE_INFOWINDOW_DATA = 'change_infoWindow_data'
