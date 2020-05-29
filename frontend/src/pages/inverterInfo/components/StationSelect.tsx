@@ -2,51 +2,67 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 
 import { TreeSelect } from 'antd'
+import { actionCreators } from '../store'
 
-const { TreeNode } = TreeSelect
+interface PropsTypes {
+  treeData: any,
+  name: any,
+  getTreeData: () => void,
+  changeTreeSelect: (name: string) => void,
+  changePreviewData: (name: string) => void
+}
 
-class StationSelect extends Component {
+class StationSelect extends Component<PropsTypes> {
   state = {
-    value: undefined,
+    value: undefined
   }
 
-  onChange = (value: any) => { // 电站的选择被改变时，重新渲染右侧的数据
-    console.log(value)
-    this.setState({ value })
-  }  
+  constructor(props: any) {
+    super(props)
+    this.props.getTreeData()
+    this.props.changePreviewData(this.props.name)
+  }
+
+  onChange = async (value: any) => { // 电站的选择被改变时，重新渲染右侧的数据
+    await this.props.changeTreeSelect(value)
+    this.props.changePreviewData(this.props.name)
+  }
 
   render() {
     return (
       <TreeSelect
-        showSearch
         style={{ width: '100%' }}
-        value={this.state.value}
+        value={this.props.name}
         dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
-        placeholder="请选择需要查看的设备"
-        allowClear
+        treeData={this.props.treeData}
+        placeholder="请选择逆变器"
         treeDefaultExpandAll
         onChange={this.onChange}
-      >
-        <TreeNode value="parent 1" title="设备列表">
-          <TreeNode value="parent 1-0" title="综合教学楼" selectable={false}>
-            <TreeNode value="综合教学楼" title="综合教学楼" />
-          </TreeNode>
-          <TreeNode value="parent 1-1" title="工科楼" selectable={false}>
-            <TreeNode value="工科一号楼" title="工科一号楼"/>
-            <TreeNode value="工科二号楼" title="工科二号楼"/>
-          </TreeNode>
-        </TreeNode>
-      </TreeSelect>
+      />
     )
   }
 }
 
 const mapStateToProps = (state: any) => {
-  return {}
+  const { treeData, name } = state.inverterInfo
+  return {
+    treeData,
+    name
+  }
 }
 
 const mapDispatchToProps = (dispatch: any) => {
-  return {}
+  return {
+    getTreeData() {
+      dispatch(actionCreators.changeTreeData())
+    },
+    changeTreeSelect(name: string) {
+      dispatch(actionCreators.changeTreeSelect(name))
+    },
+    changePreviewData(name: string) {
+      dispatch(actionCreators.changePreviewData(name))
+    }
+  }
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(StationSelect)

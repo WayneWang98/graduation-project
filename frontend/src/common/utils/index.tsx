@@ -48,3 +48,16 @@ export const getFormatDate = (date: Date, type: string) => { // yyyy-mm-dd 或 y
     default: return ''
   }
 }
+
+
+export const downloadByBinary = (data: any, title: string) => { // 根据二进制流下载表格
+  const blob = new Blob([data])
+  let downloadElement = document.createElement('a')
+  const href = window.URL.createObjectURL(blob); //创建下载的链接
+  downloadElement.href = href
+  downloadElement.download = title //下载后文件名
+  document.body.appendChild(downloadElement)
+  downloadElement.click() //点击下载
+  document.body.removeChild(downloadElement) //下载完成移除元素
+  window.URL.revokeObjectURL(href) //释放掉blob对象
+}

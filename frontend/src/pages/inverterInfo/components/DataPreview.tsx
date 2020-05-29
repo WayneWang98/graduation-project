@@ -8,9 +8,6 @@ interface PropsTypes {
 }
 
 class DataPreview extends Component<PropsTypes> {
-  // constructor(props: any) {
-  //   super(props)
-  // }
 
   render() {
     const { currentOutput, temperature, co2Reduction, equivalentTree, totalIncome } = this.props.previewData

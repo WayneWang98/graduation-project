@@ -22,3 +22,7 @@ export const getJsonResult = (obj: any, status: number, message: string) => {
   newObj.data = obj
   return JSON.stringify(newObj)
 }
+
+export const getMySQLDatetime = (date: Date) => {
+  return date.toISOString()
+}

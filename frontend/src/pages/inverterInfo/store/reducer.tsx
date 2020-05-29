@@ -2,25 +2,25 @@ import * as constants from './constants'
 import { getFormatDate } from '../../../common/utils'
 
 const defaultState = {
-  local: '长沙理工大学云塘校区',
   dateType: 'day',
   date: getFormatDate(new Date(), 'day'),
   field: '总有功功率',
-  name: 'inverter1',
+  name: 'id-4',
   previewData: {
-    currentOutput: 5000,
-    irradiance: 2.3,
-    temperature: 23,
-    co2Reduction: 10.3,
-    equivalentTree: 203,
-    totalIncome: 3003
+    currentOutput: 0,
+    irradiance: 0,
+    temperature: 0,
+    co2Reduction: 0,
+    equivalentTree: 0,
+    totalIncome: 0
   },
   chartData: [{
     times: '',
     totalActivePower: 111,
     tansTemp1: 23,
     tansTemp2: 22
-  }]
+  }],
+  treeData: []
 }
 
 const reducer = (state = defaultState, action: any) => {
@@ -45,6 +45,30 @@ const reducer = (state = defaultState, action: any) => {
     case constants.CHANGE_CHART_DATA: {
       const newState = JSON.parse(JSON.stringify(state))
       newState.chartData = action.chartData
+      return newState
+    }
+    case constants.CHANGE_TREE_DATA: {
+      const newState = JSON.parse(JSON.stringify(state))
+      newState.treeData = action.treeData
+      const temp = action.treeData
+      if (temp.length) {
+        for (let i = 0, len = temp.length; i < len; i ++) { // 初次加载时，加载默认逆变器
+          if (temp[i].children[0].children.length) {
+            newState.name = temp[i].children[0].children[0].value
+            break
+          }
+        }
+      }
+      return newState
+    }
+    case constants.CHANGE_TREE_SELECT: {
+      const newState = JSON.parse(JSON.stringify(state))
+      newState.name = action.name
+      return newState
+    }
+    case constants.CHANGE_PREVIEW_DATA: {
+      const newState = JSON.parse(JSON.stringify(state))
+      newState.previewData = action.previewData
       return newState
     }
     default: break

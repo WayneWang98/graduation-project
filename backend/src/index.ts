@@ -22,6 +22,7 @@ app.use(router)
 export const connection = mysql.createConnection(mysqlConfig)
 connection.connect()
 
+app.set('host', '10.161.4.205')
 app.listen(7001, () => {
   console.log('app is running at port: 7001')
 })

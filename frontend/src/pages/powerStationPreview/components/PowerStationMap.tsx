@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { withRouter } from 'react-router'
+
 import { connect } from 'react-redux'
 import { actionCreators } from '../store'
 
@@ -28,12 +29,12 @@ class PowerStationMap extends Component<PropsTypes> {
   render() {
     const markersList = this.getMapMarks()
     const { name, scale, totalOutput, dailyOutput, currentPower} = this.props.infoWindowData
-    
     return (
       <div className={styles['map-container']}>
         <Map 
           amapkey={this.state.amapkey} 
           version={this.state.version}
+          zoom={7}
         >
           <Markers 
             markers={markersList}
@@ -61,7 +62,6 @@ class PowerStationMap extends Component<PropsTypes> {
           </div>
           </InfoWindow>
         </Map>
-        <div onClick={this.toInverterInfo}>13123</div>
       </div>
     )
   }

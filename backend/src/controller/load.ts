@@ -13,17 +13,54 @@ interface DateType {
   [propName: string]: number
 }
 
+const getRangeRandomNumber = (min: number, max: number) => { // 生成范围内的随机数(小数点后保留一位)
+  let integer = Math.floor(Math.random() * (max - min + 1)) + min
+  let decimal = parseFloat(Math.random().toFixed(1))
+  return integer + decimal
+}
 export class LoadController {
+  async postAnalysisChart(reqBody: any) {
+    const { leafs } = reqBody
+    let data = []
+    for (let i = 0; i < leafs.length; i++) {
+      data.push({
+        name: leafs[i].title,
+        value: getRangeRandomNumber(70, 107)
+      })
+    }
+    return getJsonResult(data, 200, 'success')
+  }
+
   async postChart(reqBody: ChartReqBody) {
-    let { date, type, local } = reqBody
-    const sql = `SELECT * FROM tb_load WHERE local = "${local}" AND times LIKE "${date}%"`
+    let { type, local } = reqBody
+    let date = reqBody.date
+    const sql = `SELECT * FROM tb_load WHERE local_id = "2" AND times LIKE "${date}%"`
     const sqlResult = await new Promise(resolve => {
       connection.query(sql, function (error, results) {
         if (error) throw error
         resolve(results)
       })
     })
-    let result: any = this.handleDataWithDateType(sqlResult, 'day', 23)
+    let result: any 
+    switch(type) {
+      case 'day': {
+        result = this.handleDataWithDateType(sqlResult, 'day', 23)
+        break
+      }
+      case 'month': {
+        const year = new Date(date).getFullYear()
+        const month = new Date(date).getMonth() + 1
+        const len = new Date(year, month, 0).getDate()
+        result = this.handleDataWithDateType(sqlResult, 'month', len)
+        break
+      }
+      case 'year': {
+        result = this.handleDataWithDateType(sqlResult, 'year', 12)
+        break
+      }
+      default: break
+    }
+    
     result = getJsonResult(result, 200, 'success')
     return result
   }

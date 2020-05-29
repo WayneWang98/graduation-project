@@ -56,6 +56,9 @@ const mapDispatchToProps = (dispatch: any) => {
   return {
     changeInverterName(name: string) {
       dispatch(actionCreators.changeInverterName(name))
+    },
+    changeTableData(data: any) {
+      dispatch(actionCreators.changeTableData(data))
     }
   }
 }

@@ -2,5 +2,6 @@ export const mysqlConfig = {
   host: 'localhost',
   user: 'root',
   password: '981019',
-  database: 'gfjkpt'
+  database: 'gfjkpt_v2'
 }
+

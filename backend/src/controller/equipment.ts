@@ -4,7 +4,7 @@ import { response } from 'express'
 
 export class EquipmentController {
   async postList() {
-    const sql = `SELECT id, type, status, ip_address FROM tb_equipment;`
+    const sql = `SELECT id, name, type, state, factory_number, manufacture FROM tb_equipment;`
     const result = await new Promise(resolve => {
       connection.query(sql, function (error, results) {
         if (error) throw error
@@ -19,8 +19,9 @@ export class EquipmentController {
   }
 
   async addEquipment(reqBody: any) {
-    const { type, ipAddress, name, status } = reqBody
-    const sql = `INSERT INTO tb_equipment (type, ip_address, name, status) VALUES('${type}', '${ipAddress}', '${name}', ${status})`
+    const { type, name, factoryNumber, manufacture } = reqBody
+    const state = '0' // 设备刚添加时默认是没有开启的
+    const sql = `INSERT INTO tb_equipment (type, name, factory_number, manufacture, state) VALUES('${type}', '${name}', '${factoryNumber}', ${manufacture}, ${state})`
     const result = await new Promise(resolve => {
       connection.query(sql, (error, results) => {
         if (error) throw error
@@ -35,6 +36,26 @@ export class EquipmentController {
   async deleteEquipment(reqBody: any) {
     const { id } = reqBody
     const sql = `DELETE FROM tb_equipment WHERE id = ${id}`
+    const result = await new Promise(resolve => {
+      connection.query(sql, (error, results) => {
+        if (error) throw error
+        resolve({
+          data: 'success'
+        })
+      })
+    })
+    return getJsonResult(result, 200, 'success')
+  }
+
+  async changeEquipment(reqBody: any) {
+    const { name, type, factoryNumber, manufacture, id } = reqBody
+    const sql = `UPDATE tb_equipment 
+      SET name = '${name}',
+      type = '${type}',
+      factory_number = '${factoryNumber}',
+      manufacture = '${manufacture}'
+      WHERE id = ${id}`
+    console.log(sql)
     const result = await new Promise(resolve => {
       connection.query(sql, (error, results) => {
         if (error) throw error

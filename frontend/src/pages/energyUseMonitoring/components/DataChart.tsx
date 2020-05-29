@@ -29,14 +29,14 @@ class DataChart extends Component<PropsTypes> {
 
   onDateChange = async (date: any, dateString: any) => {
     await this.props.changeDate(dateString)
-    this.props.changeChartData()
+    await this.props.changeChartData()
   }
   
   onTabChange = async (key: string) => {
     await this.props.changeDateType(key)
     const { dateType } = this.props
     await this.props.changeDate(getFormatDate(new Date(), dateType))
-    this.props.changeChartData()
+    await this.props.changeChartData()
   }
 
   

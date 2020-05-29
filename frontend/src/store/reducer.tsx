@@ -5,27 +5,17 @@ import { reducer as powerStationPreviewReducer } from '../pages/powerStationPrev
 import { reducer as inverterInfoReducer } from '../pages/inverterInfo/store'
 import { reducer as energyUseMonitoringReducer } from '../pages/energyUseMonitoring/store'
 import { reducer as inverterHistoryReducer } from '../pages/inverterHistory/store'
+import { reducer as equipmentManagementReducer } from '../pages/equipmentManagement/store'
+import { reducer as statisticalAnalysisReducer } from '../pages/statisticalAnalysis/store'
 const reducer = combineReducers({
   leftSide: leftSideReducer,
   mainBreadCrumb: mainBreadCrumbReducer,
   powerStationPreview: powerStationPreviewReducer,
   inverterInfo: inverterInfoReducer,
   energyUseMonitoring: energyUseMonitoringReducer,
-  inverterHistory: inverterHistoryReducer
+  inverterHistory: inverterHistoryReducer,
+  equipmentManagement: equipmentManagementReducer,
+  statisticalAnalysis: statisticalAnalysisReducer
 })
-
-// const reducer = (state = defaultState, action: any)=> {
-//   if (action.type === 'change_page_name') {
-//     const newState = JSON.parse(JSON.stringify(state))
-//     newState.pageName = action.pageName
-//     return newState
-//   }
-//   if (action.type === 'change_open_menu') {
-//     const newState = JSON.parse(JSON.stringify(state))
-//     newState.openKeys = action.openKeys
-//     return newState
-//   }
-//   return state
-// }
 
 export default reducer

@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { actionCreators as leftSideActionCreators } from '../../common/leftSide/store'
+import { actionCreators } from './store'
 
 import PowerStationList from './components/PowerStationList'
 import PowerStationMap from './components/PowerStationMap'
@@ -10,7 +11,8 @@ import styles from './style.module.less'
 
 interface PropsTypes{
   changePageName: () => void,
-  changeOpenMenu: () => void
+  changeOpenMenu: () => void,
+  getStationList: () => void
 }
 
 class PowerStationPreview extends Component<PropsTypes> {
@@ -18,6 +20,7 @@ class PowerStationPreview extends Component<PropsTypes> {
     super(props)
     this.props.changeOpenMenu()
     this.props.changePageName()
+    this.props.getStationList()
   }
 
   render() {
@@ -51,6 +54,9 @@ const mapDispatchToProps = (dispatch: any) => {
     },
     changeOpenMenu() {
       dispatch(leftSideActionCreators.changeOpenMenu(['sub1']))
+    },
+    getStationList() {
+      dispatch(actionCreators.getStationList())
     }
   }
 }

@@ -10,15 +10,16 @@ interface PropsTypes {
 
 class Echarts extends Component<PropsTypes> {
 
-  shouldComponentUpdate(nextProps: any) { // 防止日期类型改变，而date未改变所引起的重复渲染，只有当date改变时才重新渲染图表
-    if (nextProps.date === this.props.date) {
-      return false
-    }
-    return true
-  }
+  // shouldComponentUpdate(nextProps: any) { // 防止日期类型改变，而date未改变所引起的重复渲染，只有当date改变时才重新渲染图表
+  //   if (nextProps.date === this.props.date) {
+  //     return false
+  //   }
+  //   return true
+  // }
 
   getOption(): echarts.EChartOption {
     const { date, chartData } = this.props
+    console.log(chartData.length)
     let timesArr: string[] = [], activePowerArr: string[] = [], apparentPowerArr: string[] = []
     if (chartData !== null) {
       chartData.forEach((item: any) => {

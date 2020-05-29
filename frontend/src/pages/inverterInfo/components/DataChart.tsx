@@ -22,12 +22,7 @@ interface PropsTypes {
   chartData: any,
   changeDateType: (type: string) => void,
   changeChartData: () => void
-  // getChartData: (date: string, dateType: string, local: string) => void
 }
-
-// interface StateTypes {
-//   getChartData: (date: string, dateType: string, local: string) => void
-// }
 
 class DataChart extends Component<PropsTypes> {
 
@@ -43,7 +38,7 @@ class DataChart extends Component<PropsTypes> {
       timesArr.push(item.times)
       tansTemp1Arr.push(item.tansTemp1)
       tansTemp2Arr.push(item.tansTemp2)
-      totalActivePowerArr.push(item.totalActivePower)
+      totalActivePowerArr.push(item.output)
     });
     return {
       title: {
@@ -168,11 +163,11 @@ const mapDispatchToProps = (dispatch: any) => {
     changeDateType(type: string) { // 点击tabs更改日期类型时执行
       dispatch(actionCreators.changeDateType(type))
     },
-    changeChartData(data: any) { // 更新图表数据
+    changeChartData() { // 更新图表数据
       const {name, dateType, date, field} = this as any // 先这样子写
       dispatch(actionCreators.changeChartData({
         type: dateType,
-        name,
+        name: name.split('-')[1],
         date,
         field
       }))

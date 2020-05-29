@@ -65,7 +65,7 @@ const mapDispatchToProps = (dispatch: any) => {
       const {name, dateType, date, field} = this as any // 先这样子写
       console.log(dateType)
       dispatch(actionCreators.changeChartData({
-        name,
+        name: name.split('-')[1],
         date,
         type: dateType,
         field

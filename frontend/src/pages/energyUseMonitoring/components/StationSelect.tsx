@@ -6,12 +6,17 @@ import { TreeSelect } from 'antd'
 
 interface PropsTypes {
   local: string,
-  changeLocal: (local: string) => void
+  treeData: any[],
+  changeLocal: (local: string) => void,
+  changeTreeData: () => void
 }
 
-const { TreeNode } = TreeSelect
-
 class StationSelect extends Component<PropsTypes> {
+
+  constructor(props: any) {
+    super(props)
+    this.props.changeTreeData()
+  }
 
   onChange = (value: any) => {
     if (value !== undefined) {
@@ -20,35 +25,38 @@ class StationSelect extends Component<PropsTypes> {
   }
 
   render() {
+    const  { treeData } = this.props
+    const treeLen = treeData.length
+    let local = ''
+    if (treeLen) {
+      for (let i = 0; i < treeLen; i ++) {
+        if (treeData[i].children.length) {
+          local = treeData[i].children[0].value
+          break
+        }
+      }
+    }
     return (
       <TreeSelect
         showSearch
         style={{ width: '100%' }}
-        value={this.props.local}
+        value={local}
         dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
         placeholder="请选择需要查看的设备"
         allowClear
+        treeData={treeData}
         treeDefaultExpandAll
         onChange={this.onChange}
-      >
-        <TreeNode value="parent 1" title="设备列表">
-          <TreeNode value="parent 1-0" title="综合教学楼" selectable={false}>
-            <TreeNode value="综合教学楼" title="综合教学楼" />
-          </TreeNode>
-          <TreeNode value="parent 1-1" title="工科楼" selectable={false}>
-            <TreeNode value="工科一号楼" title="工科一号楼"/>
-            <TreeNode value="工科二号楼" title="工科二号楼"/>
-          </TreeNode>
-        </TreeNode>
-      </TreeSelect>
+      />
     )
   }
 }
 
 const mapStateToProps = (state: any) => {
-  const { local } = state.energyUseMonitoring
+  const { local, treeData } = state.energyUseMonitoring
   return {
-    local
+    local,
+    treeData
   }
 }
 
@@ -56,6 +64,9 @@ const mapDispatchToProps = (dispatch: any) => {
   return {
     changeLocal(local: any) {
       dispatch(actionCreators.changeLocal(local))
+    },
+    changeTreeData() {
+      dispatch(actionCreators.changeTreeData()) 
     }
   }
 }

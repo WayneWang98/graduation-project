@@ -1,28 +1,31 @@
 import * as constants from './constants'
+
 const defaultState = {
-  inverterName: 'inverter1',
+  showModal: false,
   tableData: [],
-  pageNo: 1,
-  pageSize: 10,
-  totalSize: 0,
-  inverterId: 4
+  modalTitle: '添加设备'
 }
+
 const reducer = (state = defaultState, action: any) => {
-  switch(action.type) {
-    case constants.CHANGE_INVERTER_NAME: {
+  switch (action.type) {
+    case constants.CHANGE_SHOW_MODAL: {
       const newState = JSON.parse(JSON.stringify(state))
-      newState.inverterName = action.inverterName
+      newState.showModal = !newState.showModal
       return newState
     }
     case constants.CHANGE_TABLE_DATA: {
       const newState = JSON.parse(JSON.stringify(state))
       newState.tableData = action.tableData
-      newState.totalSize = action.totalSize
+      return newState
+    }
+    case constants.CHANGE_MODAL_TITLE: {
+      const newState = JSON.parse(JSON.stringify(state))
+      console.log(newState)
+      newState.modalTitle = action.modalTitle
       return newState
     }
     default: break
   }
   return state
 }
-
 export default reducer

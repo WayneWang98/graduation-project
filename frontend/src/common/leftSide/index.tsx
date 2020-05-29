@@ -79,7 +79,7 @@ class LeftSide extends Component<PropsTypes> {
           >
             <Menu.Item key="energy_use_monitoring">用能监测</Menu.Item>
             <Menu.Item key="6">能效管理</Menu.Item>
-            <Menu.Item key="7">统计分析</Menu.Item>
+            <Menu.Item key="statistical_analysis">统计分析</Menu.Item>
           </SubMenu>
           <SubMenu
             key="sub3"

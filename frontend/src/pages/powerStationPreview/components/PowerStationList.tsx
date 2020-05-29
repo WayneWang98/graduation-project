@@ -2,23 +2,42 @@
 
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import { withRouter } from 'react-router-dom'
+import moment from 'moment'
 
 import styles from '../style.module.less'
 
 interface PropsTypes {
-  stationList: any
+  stationList: any,
+  history: any
 }
 
 interface StateTypes {
-  stationList: any
+
 }
 
 class PowerStationList extends Component<PropsTypes, StateTypes> {
 
+
+  constructor(props: any) {
+    super(props)
+  }
+
+  handleItemClick = (index: number) => {
+    const { id } = this.props.stationList[index]
+    localStorage.setItem('station_id', id)
+    this.props.history.push('/inverter_info')
+  }
+
   render() {
     const stationItems = this.props.stationList.map((item: any, index: number) => {
       return (
-        <div key={item.id} className={styles['staion-list-item']}>
+        <div key={item.id} 
+          className={styles['staion-list-item']}
+          onClick={() => {
+            this.handleItemClick(index)
+          }}
+        >
           <img src={item.imgSrc} alt='test图片'/>
            <table className={styles['staion-info-table']}>
              <tbody>
@@ -44,7 +63,7 @@ class PowerStationList extends Component<PropsTypes, StateTypes> {
               </tr>
               <tr>
                 <td>最后更新时间：</td>
-                <td>{item.times}</td>
+                <td>{moment(item.updateTimes).format('YYYY-MM-DD hh:mm:ss')}</td>
               </tr>
              </tbody>
            </table>
@@ -54,7 +73,9 @@ class PowerStationList extends Component<PropsTypes, StateTypes> {
     return(
       <div className={styles['station-list']}>
         <div className={styles['staion-list-title']}>电站列表</div>
-        {stationItems}
+        <div className={styles['staion-list-container']}>
+          {stationItems}
+        </div>
       </div>
     )
   }
@@ -71,4 +92,4 @@ const mapDispatchToProps = () => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(PowerStationList)
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(PowerStationList))

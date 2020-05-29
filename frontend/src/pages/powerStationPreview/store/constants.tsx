@@ -1,1 +1,2 @@
-export const CHANGE_INFOWINDOW_DATA = 'change_infoWindow_data'
+export const CHANGE_INFOWINDOW_DATA = 'CHANGE_INFOWINDOW_DATA'
+export const GET_STATION_LIST = 'GET_STATION_LIST'

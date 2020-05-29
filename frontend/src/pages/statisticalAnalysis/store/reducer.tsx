@@ -4,22 +4,21 @@ import { getFormatDate } from '../../../common/utils'
 const defaultState = {
   dateType: 'day',
   date: getFormatDate(new Date(), 'day'),
-  previewData: {
-    currentLoad: '38.3',
-    ratio: '11.9', // 比上周同期
-    percentage: '12', // 全单位占比
-    maxMouthLoad: '55',
-    maxYearLoad: '12312'
-  },
   chartData: [],
-  treeData: []
+  treeData: [],
+  checkedLeaf: []
 }
 
 const reducer = (state = defaultState, action: any) => {
   switch (action.type) {
-    case constants.CHANGE_LOCAL: {
+    case constants.CHANGE_TREE_DATA: {
       const newState = JSON.parse(JSON.stringify(state))
-      newState.local = action.local
+      newState.treeData = action.treeData
+      return newState
+    }
+    case constants.CHANGE_CHECKED_LEAF: {
+      const newState = JSON.parse(JSON.stringify(state))
+      newState.checkedLeaf = action.checkedLeaf
       return newState
     }
     case constants.CHANGE_DATETYPE: {
@@ -35,11 +34,6 @@ const reducer = (state = defaultState, action: any) => {
     case constants.CHANGE_CHART_DATA: {
       const newState = JSON.parse(JSON.stringify(state))
       newState.chartData = action.chartData
-      return newState
-    }
-    case constants.CHANGE_TREE_DATA: {
-      const newState = JSON.parse(JSON.stringify(state))
-      newState.treeData = action.treeData
       return newState
     }
     default: break

@@ -11,7 +11,6 @@ export class User {
         if (err) {
           throw err
         }
-        console.log(results)
         resolve(results)
       })
     })
