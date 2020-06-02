@@ -37,3 +37,13 @@ export const changeModalTitle = (title: string) => { // 修改模态框的名称
     dispatch(action)
   }
 }
+
+export const changeVerificationCode = (value: string) => { // 修改输入框验证码的值
+  return async (dispatch: any) => {
+    const action = {
+      type: constants.CHANGE_VERIFICATION_CODE,
+      verificationCode: value
+    }
+    dispatch(action)
+  }
+}

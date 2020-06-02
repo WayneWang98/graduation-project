@@ -26,3 +26,8 @@ export const getJsonResult = (obj: any, status: number, message: string) => {
 export const getMySQLDatetime = (date: Date) => {
   return date.toISOString()
 }
+
+export const getRandomByLength = (len: number) => { // 获取一个固定长度的随机数（长度在10以内）
+  const number = Math.random() * Math.pow(10, len)
+  return parseInt(number + '')
+}

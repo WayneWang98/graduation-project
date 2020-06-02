@@ -3,7 +3,8 @@ import * as constants from './constants'
 const defaultState = {
   showModal: false,
   tableData: [],
-  modalTitle: '添加设备'
+  modalTitle: '添加设备',
+  verificationCode: ''
 }
 
 const reducer = (state = defaultState, action: any) => {
@@ -20,8 +21,12 @@ const reducer = (state = defaultState, action: any) => {
     }
     case constants.CHANGE_MODAL_TITLE: {
       const newState = JSON.parse(JSON.stringify(state))
-      console.log(newState)
       newState.modalTitle = action.modalTitle
+      return newState
+    }
+    case constants.CHANGE_VERIFICATION_CODE: {
+      const newState = JSON.parse(JSON.stringify(state))
+      newState.verificationCode = action.verificationCode
       return newState
     }
     default: break

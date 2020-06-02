@@ -1,6 +1,5 @@
 import { connection } from '../index'
 import { underlineToCamel, getJsonResult } from '../utils/utils'
-import { response } from 'express'
 
 export class EquipmentController {
   async postList() {
@@ -21,7 +20,8 @@ export class EquipmentController {
   async addEquipment(reqBody: any) {
     const { type, name, factoryNumber, manufacture } = reqBody
     const state = '0' // 设备刚添加时默认是没有开启的
-    const sql = `INSERT INTO tb_equipment (type, name, factory_number, manufacture, state) VALUES('${type}', '${name}', '${factoryNumber}', ${manufacture}, ${state})`
+    const sql = `INSERT INTO tb_equipment (type, name, factory_number, manufacture, state) VALUES('${type}', '${name}', '${factoryNumber}', '${manufacture}', '${state}')`
+    console.log(sql)
     const result = await new Promise(resolve => {
       connection.query(sql, (error, results) => {
         if (error) throw error

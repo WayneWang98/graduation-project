@@ -1,5 +1,6 @@
-import { connection } from '../index'
-import { getJsonResult } from '../utils/utils'
+import { connection, redisClient } from '../index'
+import { getJsonResult, getRandomByLength } from '../utils/utils'
+import { sendSMS } from '../utils'
 
 export class User {
   async login(reqBody: any) {
@@ -23,6 +24,29 @@ export class User {
         success: 'failed'
       }
     }
+    return getJsonResult(result, 200, 'success')
+  }
+
+  async getVerificationCode() {
+    sendSMS('15580919833')
+    const result = 'ok'
+    return getJsonResult(result, 200, 'success')
+  }
+
+  async checkVerificationCode(reqBody: any) { // 检查验证码是否匹配
+    const code = reqBody.code
+    const result = await new Promise(resolve => {
+      redisClient.get('15580919833', (err, res) => {
+        let data = ''
+        if (err) throw err
+        if (res === code) {
+          data = 'true'
+        } else {
+          data = 'false'
+        }
+        resolve(data)
+      })
+    })
     return getJsonResult(result, 200, 'success')
   }
 }

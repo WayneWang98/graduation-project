@@ -1,10 +1,14 @@
 import express from 'express'
 import mysql from 'mysql'
 import bodyParser from 'body-parser'
+import redis from 'redis'
 
 import router from './routes/router'
 
 import { mysqlConfig } from './config/mysqlConfig'
+
+
+export const redisClient = redis.createClient(6379, 'localhost')
 
 const app = express()
 app.all('*', function (req, res, next) {

@@ -1,15 +1,19 @@
 import React, { Component } from 'react'
-import { connect } from 'react-redux'
+import { connect, Provider } from 'react-redux'
 import { actionCreators } from '../store'
-import { Table, Modal, Input, message } from 'antd'
+import { Table, Modal, Input, message, Button } from 'antd'
+import { ExclamationCircleOutlined } from '@ant-design/icons'
 
+import ModalContent  from './ModalContent'
 import styles from '../style.module.less'
 import axios from 'axios'
 
+import store from '../../../store'
 interface PropsTypes {
   showModal: boolean,
   tableData: any,
   modalTitle: string,
+  verificationCode: string,
   changeShowModal: () => void,
   changeTableData: () => void,
   changeModalTitle: () => void
@@ -20,7 +24,7 @@ interface StateTypes {
 }
 
 const domain = 'http://localhost:7001'
-
+const { confirm } = Modal
 class EquipmentTable extends Component<PropsTypes, StateTypes> {
 
   constructor(props: any) {
@@ -76,13 +80,44 @@ class EquipmentTable extends Component<PropsTypes, StateTypes> {
     this.props.changeTableData()
   }
 
-
   handleDelete = (id: any) => { // 删除设备
-    const data = { id }
-    axios.post(domain + '/equipment/delete', data).then(res => {
-      message.success('删除设备成功！')
-      this.props.changeTableData()
+    const that = this
+    confirm({
+      title: '删除设备是不可逆操作，需要进行短信验证！',
+      icon: <ExclamationCircleOutlined />,
+      content: 
+        <Provider store={store}>
+          <ModalContent></ModalContent>
+        </Provider>,
+      okText: '确认',
+      okType: 'danger',
+      cancelText: '取消',
+      onOk(close) {
+        const code = that.props.verificationCode
+        const data = {
+          code
+        }
+        axios.post(domain + '/user/check_verification_code', data).then(res => {
+          console.log(res)
+          if (res.data.data === 'true') {
+            message.success('验证成功，设备将被删除！')
+            close()
+            const data = { id }
+            axios.post(domain + '/equipment/delete', data).then(res => {
+              message.success('删除设备成功！')
+              that.props.changeTableData()
+            })
+          } else {
+            message.error('验证码错误，请重试！')
+            close()
+          }
+        })
+      },
+      onCancel() {
+        console.log('Cancel')
+      },
     })
+
   }
 
   handleEquipmentChange = (data: any) => {
@@ -157,11 +192,12 @@ class EquipmentTable extends Component<PropsTypes, StateTypes> {
 }
 
 const mapStateToProps = (state: any) => {
-  const { showModal, tableData, modalTitle } = state.equipmentManagement
+  const { showModal, tableData, modalTitle, verificationCode } = state.equipmentManagement
   return {
     showModal,
     tableData,
-    modalTitle
+    modalTitle,
+    verificationCode
   }
 }
 
