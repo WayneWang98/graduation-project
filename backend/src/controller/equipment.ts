@@ -55,7 +55,6 @@ export class EquipmentController {
       factory_number = '${factoryNumber}',
       manufacture = '${manufacture}'
       WHERE id = ${id}`
-    console.log(sql)
     const result = await new Promise(resolve => {
       connection.query(sql, (error, results) => {
         if (error) throw error
