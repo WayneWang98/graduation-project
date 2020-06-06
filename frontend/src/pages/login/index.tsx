@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { withRouter, RouteComponentProps } from 'react-router-dom'
 import axios from 'axios'
+import cookie from 'react-cookies'
 import { Form, Input, Button, Checkbox, message } from 'antd'
 import { UserOutlined, LockOutlined } from '@ant-design/icons'
 import styles from './style.module.less'
@@ -23,6 +24,7 @@ class Login extends Component<PropsTypes> {
     axios.post(domain + '/user/login', data).then(res => {
       let result = res.data.data.success
       if (result === 'success') {
+        cookie.save('userId', username, { path: '/' })
         this.props.history.push('/power_station_preview')
       } else {
         message.error('用户名或密码错误！')

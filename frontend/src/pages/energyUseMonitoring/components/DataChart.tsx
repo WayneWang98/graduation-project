@@ -60,7 +60,7 @@ class DataChart extends Component<PropsTypes> {
         </Tabs>
         <div >
           <div className={styles['datePicker-container']}>
-            <DatePicker onChange={this.onDateChange} picker={dateType} mode={dateType} inputReadOnly value={date}/> {/**单纯的修改picker，弹框不会变化，还需要修改mode*/}
+            <DatePicker onChange={this.onDateChange} picker={dateType} mode={dateType} allowClear={false} inputReadOnly={true} value={date}/> {/**单纯的修改picker，弹框不会变化，还需要修改mode*/}
           </div>
           <Echarts></Echarts>
         </div>

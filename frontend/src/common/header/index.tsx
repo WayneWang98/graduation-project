@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-
+import cookie from 'react-cookies'
 import { Menu } from 'antd'
 import {
   CloudSyncOutlined,
@@ -20,7 +20,6 @@ class Header extends Component {
   }
 
   handleClick = (e: ClickParam) => {
-    console.log('click ', e)
     this.setState({
       current: e.key
     })
@@ -44,7 +43,7 @@ class Header extends Component {
           </Menu.Item>
           <Menu.Item key="welcome">
             <UserOutlined />
-            Welcome
+            {cookie.load('userId')}
           </Menu.Item>
           <SubMenu
             title={

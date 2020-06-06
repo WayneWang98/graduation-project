@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { RouteComponentProps, withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
+import cookie from 'react-cookies'
 import { actionCreators } from './store'
 
 import { Menu } from 'antd'
@@ -35,6 +36,13 @@ class LeftSide extends Component<PropsTypes> {
     } else {
       openKeys= latestOpenKey ? [latestOpenKey] : []
       this.props.changeOpenMenu(openKeys)
+    }
+  }
+  
+  componentDidMount() {
+    const ans =  cookie.load('userId')
+    if (!ans) {
+      this.props.history.push('/login')
     }
   }
 

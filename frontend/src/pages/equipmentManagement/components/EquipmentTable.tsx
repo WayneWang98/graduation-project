@@ -133,17 +133,28 @@ class EquipmentTable extends Component<PropsTypes, StateTypes> {
   }
 
   handleOk = (e: any) => {
-    const data = {
+    let data: any = {
       name: this.state.name,
       type: this.state.type,
       factoryNumber: this.state.factoryNumber,
       manufacture: this.state.manufacture
     }
-    axios.post(domain + '/equipment/add', data).then(res => {
-      message.success('添加设备成功！')
-      this.props.changeTableData()
-    })
-    this.props.changeShowModal()
+    if (this.props.modalTitle === '修改设备') {
+      data.id = this.state.id
+      axios.post(domain + '/equipment/change', data).then(res => {
+        message.success('修改设备成功！')
+        this.props.changeTableData()
+        this.props.changeShowModal()
+      })
+    } else {
+      axios.post(domain + '/equipment/add', data).then(res => {
+        message.success('添加设备成功！')
+        this.props.changeTableData()
+        this.props.changeShowModal()
+      })
+    }
+    
+    
   }
 
   handleCancel = () => {
