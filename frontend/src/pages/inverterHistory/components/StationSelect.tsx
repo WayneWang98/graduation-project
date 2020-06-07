@@ -6,54 +6,66 @@ import { TreeSelect } from 'antd'
 
 interface PropsTypes {
   changeInverterName: (name: string) => void,
-  inverterName: string
+  getTreeData: () => void,
+  changeTableData: (data: any) => void,
+  inverterName: string,
+  treeData: any,
+  pageNo: string,
+  pageSize: string,
+  inverterId: string
 }
 
 const { TreeNode } = TreeSelect
 
 class StationSelect extends Component<PropsTypes> {
 
-  onChange = (value: any) => {
-    console.log(value)
-    this.props.changeInverterName(value)
+  constructor(props: any) {
+    super(props)
+    this.props.getTreeData()
+  }
+
+  onChange = async (value: any) => {
+    await this.props.changeInverterName(value)
+    const data =  {
+      pageNo: this.props.pageNo, 
+      pageSize: this.props.pageSize, 
+      inverterId: this.props.inverterId
+    } 
+    this.props.changeTableData(data)
   }  
 
   render() {
     return (
       <TreeSelect
-        showSearch
         style={{ width: '100%' }}
         value={this.props.inverterName}
         dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
-        placeholder="请选择需要查看的设备"
-        allowClear
+        treeData={this.props.treeData}
+        placeholder="请选择逆变器"
         treeDefaultExpandAll
         onChange={this.onChange}
-      >
-        <TreeNode value="parent 1" title="设备列表">
-          <TreeNode value="parent 1-0" title="综合教学楼" selectable={false}>
-            <TreeNode value="inverter1" title="综合教学楼" />
-          </TreeNode>
-          <TreeNode value="parent 1-1" title="工科楼" selectable={false}>
-            <TreeNode value="inverter2" title="工科一号楼"/>
-            <TreeNode value="inverter3" title="工科二号楼"/>
-          </TreeNode>
-        </TreeNode>
-      </TreeSelect>
+      />
     )
   }
 
 }
 
 const mapStateToProps = (state: any) => {
-  const { inverterName } = state.inverterHistory
+  const { inverterName, treeData, pageNo, pageSize, inverterId } = state.inverterHistory
   return {
-    inverterName
+    inverterName,
+    treeData,
+    pageNo, 
+    pageSize, 
+    inverterId
   }
 }
 
 const mapDispatchToProps = (dispatch: any) => {
   return {
+    getTreeData() {
+      dispatch(actionCreators.changeTreeData())
+    },
     changeInverterName(name: string) {
       dispatch(actionCreators.changeInverterName(name))
     },

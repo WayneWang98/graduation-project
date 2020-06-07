@@ -1,5 +1,6 @@
 import * as constants from './constants'
 import { getFormatDate } from '../../../common/utils'
+import { message } from 'antd'
 import axios from 'axios'
 
 const domain = 'http://localhost:7001'
@@ -21,6 +22,7 @@ const getChartData = async (date: string, type: string, name: string, field: str
     name
   }
   return await axios.post(domain + '/inverter/chart', data).then(res => {
+    message.success('数据更新成功！')
     return res.data.data
   })
 }
@@ -67,11 +69,17 @@ export const changeField = (field: any) => {
 }
 
 export const changeChartData =  (data: any) => {
-  const { name, type, date, field} = data
+  const { name, type, date, field } = data
+  let inverterId: any
+  if (name.indexOf('-') !== -1) {
+    inverterId = name.split('-')[1]
+  } else {
+    inverterId = name
+  }
   return async (dispatch: any) => {
     const action = {
       type: constants.CHANGE_CHART_DATA,
-      chartData: await getChartData(date, type, name, field)
+      chartData: await getChartData(date, type, inverterId, field)
     }
     dispatch(action)
   }

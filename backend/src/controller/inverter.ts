@@ -1,7 +1,7 @@
 import { connection } from '../index'
 import { options, header } from '../config/inverterTableConfig'
 
-import { underlineToCamel, getJsonResult, getMySQLDatetime } from '../utils/utils'
+import { underlineToCamel, getJsonResult, getMySQLDatetime, getSum } from '../utils/utils'
 import { download } from '../utils'
 
 interface ListReqBody {
@@ -80,6 +80,7 @@ export class InverterController {
         resolve(results[0].total)
       })
     })
+    console.log(inverterId)
     const sql = `SELECT * FROM tb_inverter WHERE inverter_id = '${inverterId}' ORDER BY CAST(times as datetime) DESC LIMIT ${rangeStart}, ${pageSize};`
     const result = await new Promise(resolve => {
       connection.query(sql, function (error, results) {
@@ -98,9 +99,9 @@ export class InverterController {
     return result
   }
 
-  async searchDataByTimeRound(startTime: Date, endTime: Date) { // 查询某一时间段的数据
+  async searchDataByTimeRound(startTime: Date, endTime: Date, id: string) { // 查询某一时间段的数据
     // between and 会包含边界，不建议在这里使用
-    const sql = `SELECT * FROM tb_inverter WHERE inverter_id = 4 AND times >= '${getMySQLDatetime(startTime)}' AND  times < '${getMySQLDatetime(endTime)}'`
+    const sql = `SELECT * FROM tb_inverter WHERE inverter_id = '${id}' AND times >= '${getMySQLDatetime(startTime)}' AND  times < '${getMySQLDatetime(endTime)}'`
     return await new Promise(resolve => {
       connection.query(sql, (error, results) => {
         if (error) throw error
@@ -112,7 +113,8 @@ export class InverterController {
   async postChart(reqBody: ChartReqBody) {
     let { date, type, name, field} = reqBody
     field = FieldType[field]
-    let startTime: Date, endTime: Date
+    console.log(date, type, name, field)
+    let startTime: any, endTime: any
     startTime = new Date(date)
     startTime = new Date(startTime.getFullYear(), startTime.getMonth(), startTime.getDate(), 8, 0, 0) // 转为北京时间
     let arr: any[] = []
@@ -120,8 +122,8 @@ export class InverterController {
       case 'day': {
         for (let i = 0; i < 24; i ++) {
           let copyStartTime = new Date(date.valueOf()) // 日期对象的深拷贝
-          endTime = new Date(copyStartTime.setHours(startTime.getHours() + 1))
-          arr.push(await this.searchDataByTimeRound(startTime, endTime))
+          endTime = new Date(copyStartTime.setHours(i + 9))
+          arr.push(await this.searchDataByTimeRound(startTime, endTime, name))
           startTime = endTime
         }
         break
@@ -133,7 +135,7 @@ export class InverterController {
         for (let i = 0; i < len; i ++) {
           let copyStartTime = new Date(date.valueOf())
           endTime = new Date(copyStartTime.setDate(startTime.getDate() + 1))
-          arr.push(await this.searchDataByTimeRound(startTime, endTime))
+          arr.push(await this.searchDataByTimeRound(startTime, endTime,  name))
           startTime = endTime
         }
         break
@@ -142,18 +144,22 @@ export class InverterController {
         for (let i = 0; i < 12; i ++) {
           let copyStartTime = new Date(date.valueOf())
           endTime = new Date(copyStartTime.setMonth(startTime.getMonth() + 1))
-          arr.push(await this.searchDataByTimeRound(startTime, endTime))
+          arr.push(await this.searchDataByTimeRound(startTime, endTime, name))
           startTime = endTime
         }
         break
       }
       default: break
     }
-    return getJsonResult(this.handleData(arr), 200, 'success')
+    return getJsonResult(this.handleData(arr, field, type), 200, 'success')
   }
 
-  handleData(data: any[]) {
+  handleData(data: any[], field: string, dateType: string) {
     let arr: any[] = []
+    let start = 1
+    if (dateType === 'day') {
+      start = 0
+    }
     data.forEach((item: any, index: number) => {
       let tansTemp1 = 0, tansTemp2 = 0
       const len = item.length
@@ -163,27 +169,37 @@ export class InverterController {
       })
       if (len === 0) {
         arr.push({
-          times: index,
+          times: index + start,
           tansTemp1: null,
           tansTemp2: null,
           output: null,
         })
       } else {
-        arr.push({
-          times: index,
-          tansTemp1: (tansTemp1 / len).toFixed(2),
-          tansTemp2: (tansTemp2 / len).toFixed(2),
-          output: (parseFloat(item[len - 1]['daily_output']) - parseFloat(item[0]['daily_output'])).toFixed(2)
-        })
+        if (field === 'active_power') {
+          arr.push({
+            times: index + start,
+            tansTemp1: (tansTemp1 / len).toFixed(2),
+            tansTemp2: (tansTemp2 / len).toFixed(2),
+            output: (getSum(item) / len).toFixed(2)
+          })
+        } else {
+          arr.push({
+            times: index + start,
+            tansTemp1: (tansTemp1 / len).toFixed(2),
+            tansTemp2: (tansTemp2 / len).toFixed(2),
+            output: (parseFloat(item[len - 1][field]) - parseFloat(item[0][field])).toFixed(2)
+          })
+        }
       }
     })
     return arr
   }
 
-  async download() {
+  async download(reqBody: any) {
     let data: any = []
+    const id = reqBody.inverterId
     data = data.concat(header)
-    const sql = `SELECT * FROM tb_inverter WHERE inverter_id = 4`
+    const sql = `SELECT * FROM tb_inverter WHERE inverter_id = '${id}'`
     const result: any = await new Promise(resolve => {
       connection.query(sql, function (error, results) {
         if (error) throw error

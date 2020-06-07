@@ -19,9 +19,8 @@ class Echarts extends Component<PropsTypes> {
 
   getOption(): echarts.EChartOption {
     const { date, chartData } = this.props
-    console.log(chartData.length)
     let timesArr: string[] = [], activePowerArr: string[] = [], apparentPowerArr: string[] = []
-    if (chartData !== null) {
+    if (chartData !== undefined && chartData.length) {
       chartData.forEach((item: any) => {
         timesArr.push(item.times)
         activePowerArr.push(item.activePower)

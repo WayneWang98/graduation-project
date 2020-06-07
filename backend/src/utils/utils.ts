@@ -31,3 +31,11 @@ export const getRandomByLength = (len: number) => { // 获取一个固定长度�
   const number = Math.random() * Math.pow(10, len)
   return parseInt(number + '')
 }
+
+export const getSum = (arr : any) => { // 求和函数
+  let sum = 0
+  arr.forEach((item: any) => {
+    sum += parseFloat(item['active_power'])
+  })
+  return sum
+}

@@ -7,9 +7,13 @@ import { actionCreators } from '../store'
 interface PropsTypes {
   treeData: any,
   name: any,
+  dateType: string, 
+  date: string,
+  field: string, 
   getTreeData: () => void,
   changeTreeSelect: (name: string) => void,
-  changePreviewData: (name: string) => void
+  changePreviewData: (name: string) => void,
+  changeChartData: (data: any) => void
 }
 
 class StationSelect extends Component<PropsTypes> {
@@ -26,6 +30,8 @@ class StationSelect extends Component<PropsTypes> {
   onChange = async (value: any) => { // 电站的选择被改变时，重新渲染右侧的数据
     await this.props.changeTreeSelect(value)
     this.props.changePreviewData(this.props.name)
+    const { name, dateType, date, field } = this.props
+    this.props.changeChartData({name, type: dateType, date, field})
   }
 
   render() {
@@ -44,10 +50,13 @@ class StationSelect extends Component<PropsTypes> {
 }
 
 const mapStateToProps = (state: any) => {
-  const { treeData, name } = state.inverterInfo
+  const { treeData, name, dateType, date, field } = state.inverterInfo
   return {
     treeData,
-    name
+    name,
+    dateType, 
+    date, 
+    field
   }
 }
 
@@ -61,6 +70,9 @@ const mapDispatchToProps = (dispatch: any) => {
     },
     changePreviewData(name: string) {
       dispatch(actionCreators.changePreviewData(name))
+    },
+    changeChartData(data: any) {
+      dispatch(actionCreators.changeChartData(data))
     }
   }
 }

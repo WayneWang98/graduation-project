@@ -73,8 +73,8 @@ class LeftSide extends Component<PropsTypes> {
           >
             <Menu.Item key="power_station_preview">电站预览</Menu.Item>
             <Menu.Item key="inverter_info">逆变器信息</Menu.Item>
-            <Menu.Item key="3">发电质量</Menu.Item>
-            <Menu.Item key="4">预测分析</Menu.Item>
+            {/* <Menu.Item key="3">发电质量</Menu.Item>
+            <Menu.Item key="4">预测分析</Menu.Item> */}
           </SubMenu>
           <SubMenu
             key="sub2"
@@ -86,10 +86,10 @@ class LeftSide extends Component<PropsTypes> {
             }
           >
             <Menu.Item key="energy_use_monitoring">用能监测</Menu.Item>
-            <Menu.Item key="6">能效管理</Menu.Item>
+            {/* <Menu.Item key="6">能效管理</Menu.Item> */}
             <Menu.Item key="statistical_analysis">统计分析</Menu.Item>
           </SubMenu>
-          <SubMenu
+          {/* <SubMenu
             key="sub3"
             title={
               <span>
@@ -99,7 +99,7 @@ class LeftSide extends Component<PropsTypes> {
             }
           >
             <Menu.Item key="9">发用电比较</Menu.Item>
-          </SubMenu>
+          </SubMenu> */}
           <SubMenu
             key="sub4"
             title={

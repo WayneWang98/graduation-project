@@ -32,7 +32,7 @@ class DataChart extends Component<PropsTypes> {
   }
 
   getOption(): echarts.EChartOption {
-    const { date, chartData } = this.props
+    const { date, chartData  } = this.props
     let timesArr: any = [], tansTemp1Arr: any = [], tansTemp2Arr: any = [], totalActivePowerArr: any = []
     chartData.forEach((item: any) => {
       timesArr.push(item.times)

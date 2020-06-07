@@ -8,7 +8,6 @@ export class User {
   async login(reqBody: any) {
     const { username, password } = reqBody
     const md5Password = md5(password)
-    console.log(username, md5Password)
     let result: any = await new Promise(resolve => {
       const sql = `SELECT * FROM tb_user WHERE username = '${username}' AND password = '${md5Password}'`
       connection.query(sql, (err, results) => {

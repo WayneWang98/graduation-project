@@ -64,7 +64,7 @@ router.post('/inverter/preview', async (req, res) => {
 })
 router.post('/inverter/download', async (req, res) => {
   const inverter = new InverterController()
-  const buf = await inverter.download()
+  const buf = await inverter.download(req.body)
   res.set({
     "Content-Type":"application/octet-stream", // 告诉浏览器这是一个二进制文件
     "Content-Disposition":"attachment" // 告诉浏览器这是一个需要下载的文件

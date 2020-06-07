@@ -34,7 +34,8 @@ export class LoadController {
   async postChart(reqBody: ChartReqBody) {
     let { type, local } = reqBody
     let date = reqBody.date
-    const sql = `SELECT * FROM tb_load WHERE local_id = "2" AND times LIKE "${date}%"`
+    console.log(type, local, date)
+    const sql = `SELECT * FROM tb_load WHERE local_id = '${local}' AND times LIKE "${date}%"`
     const sqlResult = await new Promise(resolve => {
       connection.query(sql, function (error, results) {
         if (error) throw error

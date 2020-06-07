@@ -9,8 +9,9 @@ const defaultState = {
     ratio: '11.9', // 比上周同期
     percentage: '12', // 全单位占比
     maxMouthLoad: '55',
-    maxYearLoad: '12312'
+    maxYearLoad: '1231'
   },
+  local: 2,
   chartData: [],
   treeData: []
 }

@@ -3,13 +3,14 @@ import React, { Component } from 'react'
 import { DatePicker, Select } from 'antd'
 import { connect } from 'react-redux'
 import { actionCreators } from '../store'
-
+import moment from 'moment'
 
 import styles from '../style.module.less'
 
 const { Option } = Select
 
 interface PropsType {
+  date: any,
   changeDate: (date: string) => void,
   changeField: (field: string) => void,
   changeChartData: () => void
@@ -29,6 +30,7 @@ class YearChart extends Component<PropsType> {
   }
 
   render() {
+    const { date } = this.props
     return (
       <div>
         <div className={styles['datePicker-container']}>
@@ -36,7 +38,7 @@ class YearChart extends Component<PropsType> {
             <Option value="总有功功率">总有功功率</Option>
             <Option value="总发电量">总发电量</Option>
           </Select>
-          <DatePicker onChange={this.onChange} inputReadOnly={true} className={styles['datePicker']} picker="year"/>
+          <DatePicker allowClear={false} onChange={this.onChange} inputReadOnly={true} className={styles['datePicker']} picker="year" value={moment(date)}/>
         </div>
       </div>
     )

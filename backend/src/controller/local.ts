@@ -118,7 +118,7 @@ export class LocalController {
           return {
             title: item.name,
             value: item.id,
-            selectable: false,
+            selectable: true,
             children: null
           }
         })

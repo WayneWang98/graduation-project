@@ -29,7 +29,7 @@ class DataTable extends Component<PropsTypes> {
   }
 
   handleButtonClick() {
-    axios.post('http://localhost:7001/inverter/download', {}, {responseType: 'blob'}).then((res: any) => {
+    axios.post('http://localhost:7001/inverter/download', {id: this.props.inverterId}, {responseType: 'blob'}).then((res: any) => {
       downloadByBinary(res.data, '逆变器历史数据.xlsx')
     })
   }

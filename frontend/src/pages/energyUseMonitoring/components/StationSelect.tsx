@@ -7,8 +7,11 @@ import { TreeSelect } from 'antd'
 interface PropsTypes {
   local: string,
   treeData: any[],
+  dateType: string,
+  date: string,
   changeLocal: (local: string) => void,
-  changeTreeData: () => void
+  changeTreeData: () => void,
+  changeChartData:(data: any) => void
 }
 
 class StationSelect extends Component<PropsTypes> {
@@ -18,9 +21,11 @@ class StationSelect extends Component<PropsTypes> {
     this.props.changeTreeData()
   }
 
-  onChange = (value: any) => {
+  onChange = async (value: any) => {
     if (value !== undefined) {
-      this.props.changeLocal(value)
+      await this.props.changeLocal(value)
+      const { dateType, date, local } = this.props 
+      this.props.changeChartData({type: dateType, date, local})
     }
   }
 
@@ -40,7 +45,7 @@ class StationSelect extends Component<PropsTypes> {
       <TreeSelect
         showSearch
         style={{ width: '100%' }}
-        value={local}
+        value={this.props.local || local}
         dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
         placeholder="请选择需要查看的设备"
         allowClear
@@ -53,10 +58,12 @@ class StationSelect extends Component<PropsTypes> {
 }
 
 const mapStateToProps = (state: any) => {
-  const { local, treeData } = state.energyUseMonitoring
+  const { local, treeData, dateType, date } = state.energyUseMonitoring
   return {
     local,
-    treeData
+    treeData,
+    dateType,
+    date
   }
 }
 
@@ -67,6 +74,9 @@ const mapDispatchToProps = (dispatch: any) => {
     },
     changeTreeData() {
       dispatch(actionCreators.changeTreeData()) 
+    },
+    changeChartData(data: any) {
+      dispatch(actionCreators.changeChartData(data)) 
     }
   }
 }
